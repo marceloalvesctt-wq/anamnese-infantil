@@ -1,0 +1,1194 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=DM+Sans:wght@300;400;500&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --sage: #5a7a5e;
+    --sage-light: #e8f0e9;
+    --sage-mid: #b5ceb8;
+    --cream: #faf8f4;
+    --warm: #f5f0e8;
+    --text: #2c2c2a;
+    --text-muted: #6b6b68;
+    --border: rgba(90,122,94,0.2);
+    --radius: 12px;
+  }
+
+  #app {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    min-height: 100vh;
+    color: var(--text);
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--sage);
+    padding: 2rem 1.5rem 3rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 180px; height: 180px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -20px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header-icon {
+    width: 56px; height: 56px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 24px;
+  }
+  .header h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px;
+    font-weight: 600;
+    color: #fff;
+    margin-bottom: 6px;
+  }
+  .header p {
+    color: rgba(255,255,255,0.75);
+    font-size: 13px;
+    font-weight: 300;
+  }
+
+  /* PROGRESS */
+  .progress-wrap {
+    background: #fff;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .progress-bar {
+    height: 4px;
+    background: var(--sage-light);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: var(--sage);
+    border-radius: 2px;
+    transition: width 0.4s ease;
+  }
+  .step-dots {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .step-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    transition: background 0.3s;
+  }
+  .step-dot.active { background: var(--sage); }
+  .step-dot.done { background: var(--sage-mid); }
+
+  /* FORM CONTAINER */
+  .form-container {
+    max-width: 580px;
+    margin: 0 auto;
+    padding: 1.5rem 1.25rem 6rem;
+  }
+
+  .section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+  }
+  .section.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--sage);
+    margin-bottom: 4px;
+  }
+  .section-subtitle {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+  }
+
+  /* FIELDS */
+  .field {
+    margin-bottom: 1.25rem;
+  }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+  .field label span { color: #b55; }
+  .field input[type="text"],
+  .field input[type="date"],
+  .field input[type="number"],
+  .field textarea,
+  .field select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    color: var(--text);
+    background: #fff;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .field input:focus,
+  .field textarea:focus,
+  .field select:focus {
+    border-color: var(--sage);
+  }
+  .field textarea { resize: vertical; min-height: 90px; }
+
+  .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  /* RADIO / CHECK */
+  .options-group { display: flex; flex-direction: column; gap: 8px; }
+  .option-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+    background: #fff;
+    transition: border-color 0.2s, background 0.2s;
+    font-size: 14px;
+  }
+  .option-item:hover { border-color: var(--sage-mid); background: var(--sage-light); }
+  .option-item.selected { border-color: var(--sage); background: var(--sage-light); }
+  .option-item input { display: none; }
+  .option-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    border: 2px solid var(--sage-mid);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .option-item.selected .option-dot {
+    border-color: var(--sage);
+    background: var(--sage);
+  }
+  .option-dot::after {
+    content: '';
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #fff;
+    display: none;
+  }
+  .option-item.selected .option-dot::after { display: block; }
+
+  .check-dot {
+    width: 16px; height: 16px;
+    border-radius: 4px;
+    border: 2px solid var(--sage-mid);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .option-item.selected .check-dot {
+    border-color: var(--sage);
+    background: var(--sage);
+  }
+  .check-dot::after {
+    content: '✓';
+    font-size: 10px;
+    color: #fff;
+    display: none;
+  }
+  .option-item.selected .check-dot::after { display: block; }
+
+  /* BUTTONS */
+  .btn-row {
+    display: flex;
+    gap: 12px;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    padding: 1rem 1.25rem;
+    background: rgba(250,248,244,0.95);
+    backdrop-filter: blur(4px);
+    border-top: 1px solid var(--border);
+    z-index: 20;
+  }
+  .btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn-back {
+    background: #fff;
+    color: var(--text-muted);
+    border: 1.5px solid var(--border);
+  }
+  .btn-next {
+    background: var(--sage);
+    color: #fff;
+  }
+  .btn-next:hover { opacity: 0.9; }
+
+  /* ADMIN TOGGLE */
+  .admin-toggle {
+    text-align: center;
+    padding: 1rem;
+    background: var(--warm);
+    border-top: 1px solid var(--border);
+  }
+  .admin-btn {
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+  }
+  .admin-btn:hover { background: var(--warm); color: var(--text); }
+
+  /* ADMIN PANEL */
+  #admin-panel {
+    display: none;
+    padding: 1.5rem 1.25rem 3rem;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  #admin-panel.visible { display: block; }
+
+  .admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: var(--sage);
+  }
+  .admin-close {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-muted);
+  }
+
+  .submissions-list { display: flex; flex-direction: column; gap: 12px; }
+  .submission-card {
+    background: #fff;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .submission-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: var(--sage-light);
+    cursor: pointer;
+  }
+  .submission-card-header h3 {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--sage);
+  }
+  .submission-card-header span {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .submission-body {
+    display: none;
+    padding: 16px;
+  }
+  .submission-body.open { display: block; }
+
+  .answer-section { margin-bottom: 1.25rem; }
+  .answer-section h4 {
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--sage);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .answer-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 13px;
+  }
+  .answer-q {
+    color: var(--text-muted);
+    min-width: 120px;
+    flex-shrink: 0;
+  }
+  .answer-a {
+    color: var(--text);
+    font-weight: 500;
+  }
+
+  .empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: var(--sage-light);
+    color: var(--sage);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+
+  /* SUCCESS */
+  #success-screen {
+    display: none;
+    text-align: center;
+    padding: 4rem 2rem;
+  }
+  #success-screen.visible { display: block; }
+  .success-icon {
+    width: 72px; height: 72px;
+    background: var(--sage-light);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 1.5rem;
+    font-size: 32px;
+  }
+  #success-screen h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    color: var(--sage);
+    margin-bottom: 8px;
+  }
+  #success-screen p {
+    font-size: 14px;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* LOGIN */
+  #admin-login {
+    padding: 1.5rem;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+  #admin-login h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    color: var(--sage);
+    margin-bottom: 1rem;
+  }
+  #admin-login input {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 10px;
+    outline: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  #admin-login input:focus { border-color: var(--sage); }
+  #admin-login button {
+    width: 100%;
+    padding: 11px;
+    background: var(--sage);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  .login-err { font-size: 12px; color: #b55; margin-top: 6px; display: none; }
+</style>
+
+<div id="app">
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-icon">🌿</div>
+    <h1>Anamnese Infantil</h1>
+    <p>Atendimento Psicológico Domiciliar • Preencha com calma</p>
+  </div>
+
+  <!-- FORM PART -->
+  <div id="form-part">
+    <div class="progress-wrap">
+      <div class="progress-label">
+        <span id="section-name">Dados da Criança</span>
+        <span id="section-count">1 de 9</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:11%"></div></div>
+      <div class="step-dots" id="step-dots"></div>
+    </div>
+
+    <div class="form-container">
+
+      <!-- SEÇÃO 1: DADOS DA CRIANÇA -->
+      <div class="section active" id="sec-1">
+        <p class="section-title">Dados da Criança</p>
+        <p class="section-subtitle">Informações básicas sobre a criança</p>
+
+        <div class="field">
+          <label>Nome completo da criança <span>*</span></label>
+          <input type="text" id="nome_crianca" placeholder="Nome completo">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label>Data de nascimento <span>*</span></label>
+            <input type="date" id="data_nasc">
+          </div>
+          <div class="field">
+            <label>Sexo</label>
+            <select id="sexo">
+              <option value="">Selecione</option>
+              <option>Masculino</option>
+              <option>Feminino</option>
+              <option>Outro</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Escola / Creche</label>
+          <input type="text" id="escola" placeholder="Nome da escola ou creche">
+        </div>
+        <div class="field">
+          <label>Ano / Série</label>
+          <input type="text" id="serie" placeholder="Ex: Maternal II, 1º ano...">
+        </div>
+        <div class="field">
+          <label>Com quem a criança mora?</label>
+          <textarea id="quem_mora" placeholder="Ex: Pai, mãe e irmã..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 2: DADOS DA FAMÍLIA -->
+      <div class="section" id="sec-2">
+        <p class="section-title">Dados da Família</p>
+        <p class="section-subtitle">Informações sobre os responsáveis</p>
+
+        <div class="field">
+          <label>Nome do responsável principal</label>
+          <input type="text" id="nome_resp" placeholder="Nome completo">
+        </div>
+        <div class="row-2">
+          <div class="field">
+            <label>Grau de parentesco</label>
+            <select id="parentesco">
+              <option value="">Selecione</option>
+              <option>Mãe</option>
+              <option>Pai</option>
+              <option>Avó/Avô</option>
+              <option>Tia/Tio</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Idade do responsável</label>
+            <input type="number" id="idade_resp" placeholder="Ex: 32">
+          </div>
+        </div>
+        <div class="field">
+          <label>Profissão do responsável</label>
+          <input type="text" id="profissao_resp" placeholder="Ex: Professora">
+        </div>
+        <div class="field">
+          <label>Estado civil dos pais</label>
+          <select id="estado_civil">
+            <option value="">Selecione</option>
+            <option>Casados / União estável</option>
+            <option>Separados / Divorciados</option>
+            <option>Solteiro(a)</option>
+            <option>Viúvo(a)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>A criança tem irmãos? Quantos e idades?</label>
+          <textarea id="irmaos" placeholder="Ex: Sim, uma irmã de 5 anos e um irmão de 8 anos..."></textarea>
+        </div>
+        <div class="field">
+          <label>Outras pessoas que convivem com a criança</label>
+          <textarea id="outros_convivem" placeholder="Ex: Avó materna, babá..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 3: ROTINA DA CRIANÇA -->
+      <div class="section" id="sec-3">
+        <p class="section-title">Rotina da Criança</p>
+        <p class="section-subtitle">Como é o dia a dia da criança</p>
+
+        <div class="row-2">
+          <div class="field">
+            <label>Horário que acorda</label>
+            <input type="text" id="hora_acorda" placeholder="Ex: 7h">
+          </div>
+          <div class="field">
+            <label>Horário que dorme</label>
+            <input type="text" id="hora_dorme" placeholder="Ex: 21h">
+          </div>
+        </div>
+        <div class="field">
+          <label>A criança tira soneca durante o dia?</label>
+          <div class="options-group" id="soneca">
+            <div class="option-item" onclick="selectRadio(this,'soneca')"><div class="option-dot"></div>Sim, regularmente</div>
+            <div class="option-item" onclick="selectRadio(this,'soneca')"><div class="option-dot"></div>Às vezes</div>
+            <div class="option-item" onclick="selectRadio(this,'soneca')"><div class="option-dot"></div>Não costuma tirar</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Como é a alimentação da criança?</label>
+          <textarea id="alimentacao" placeholder="Ex: Come bem, tem restrições, muito seletiva..."></textarea>
+        </div>
+        <div class="field">
+          <label>Atividades extracurriculares</label>
+          <textarea id="atividades" placeholder="Ex: Natação, futebol, ballet..."></textarea>
+        </div>
+        <div class="field">
+          <label>Tempo de tela por dia (TV, celular, tablet)</label>
+          <select id="tela">
+            <option value="">Selecione</option>
+            <option>Menos de 1 hora</option>
+            <option>1 a 2 horas</option>
+            <option>2 a 4 horas</option>
+            <option>Mais de 4 horas</option>
+            <option>Sem restrição definida</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 4: ROTINA DOS PAIS -->
+      <div class="section" id="sec-4">
+        <p class="section-title">Rotina dos Pais</p>
+        <p class="section-subtitle">Dinâmica familiar e disponibilidade</p>
+
+        <div class="field">
+          <label>Qual o horário de trabalho dos responsáveis?</label>
+          <textarea id="horario_trabalho" placeholder="Ex: Mãe trabalha das 8h às 18h, pai trabalha em turno..."></textarea>
+        </div>
+        <div class="field">
+          <label>Quem cuida da criança enquanto os pais trabalham?</label>
+          <textarea id="cuidador" placeholder="Ex: Babá, avó, fica na escola..."></textarea>
+        </div>
+        <div class="field">
+          <label>Os pais têm tempo de qualidade com a criança?</label>
+          <div class="options-group" id="tempo_qualidade">
+            <div class="option-item" onclick="selectRadio(this,'tempo_qualidade')"><div class="option-dot"></div>Sim, quase todos os dias</div>
+            <div class="option-item" onclick="selectRadio(this,'tempo_qualidade')"><div class="option-dot"></div>Nos fins de semana principalmente</div>
+            <div class="option-item" onclick="selectRadio(this,'tempo_qualidade')"><div class="option-dot"></div>Pouco, pela rotina corrida</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Como é a dinâmica da família? Conflitos, mudanças recentes?</label>
+          <textarea id="dinamica_familia" placeholder="Ex: Mudamos de cidade recentemente, houve separação..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 5: DESENVOLVIMENTO -->
+      <div class="section" id="sec-5">
+        <p class="section-title">Desenvolvimento</p>
+        <p class="section-subtitle">Marcos do desenvolvimento da criança</p>
+
+        <div class="field">
+          <label>Como foi a gestação?</label>
+          <div class="options-group" id="gestacao">
+            <div class="option-item" onclick="selectRadio(this,'gestacao')"><div class="option-dot"></div>Tranquila, sem intercorrências</div>
+            <div class="option-item" onclick="selectRadio(this,'gestacao')"><div class="option-dot"></div>Com algumas complicações</div>
+            <div class="option-item" onclick="selectRadio(this,'gestacao')"><div class="option-dot"></div>Complicações sérias</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Tipo de parto</label>
+          <select id="parto">
+            <option value="">Selecione</option>
+            <option>Normal / Vaginal</option>
+            <option>Cesárea</option>
+            <option>Fórceps</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Com que idade a criança começou a andar?</label>
+          <input type="text" id="idade_andar" placeholder="Ex: 11 meses, 1 ano e 2 meses...">
+        </div>
+        <div class="field">
+          <label>Com que idade a criança começou a falar?</label>
+          <input type="text" id="idade_falar" placeholder="Ex: 1 ano, 18 meses...">
+        </div>
+        <div class="field">
+          <label>Controle dos esfíncteres (xixi e cocô)</label>
+          <select id="esfincters">
+            <option value="">Selecione</option>
+            <option>Já tem controle completo</option>
+            <option>Em processo de aprendizado</option>
+            <option>Ainda usa fralda</option>
+            <option>Teve controle mas regrediu</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Histórico de internações, cirurgias ou doenças importantes</label>
+          <textarea id="historico_saude" placeholder="Ex: Internação por pneumonia aos 2 anos..."></textarea>
+        </div>
+        <div class="field">
+          <label>A criança faz uso de algum medicamento?</label>
+          <textarea id="medicamentos" placeholder="Ex: Ritalina 10mg, nenhum..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 6: COMUNICAÇÃO -->
+      <div class="section" id="sec-6">
+        <p class="section-title">Comunicação</p>
+        <p class="section-subtitle">Como a criança se expressa e se comunica</p>
+
+        <div class="field">
+          <label>Como você avalia a fala da criança?</label>
+          <div class="options-group" id="fala">
+            <div class="option-item" onclick="selectRadio(this,'fala')"><div class="option-dot"></div>Clara e adequada para a idade</div>
+            <div class="option-item" onclick="selectRadio(this,'fala')"><div class="option-dot"></div>Com algumas dificuldades de pronúncia</div>
+            <div class="option-item" onclick="selectRadio(this,'fala')"><div class="option-dot"></div>Difícil de entender</div>
+            <div class="option-item" onclick="selectRadio(this,'fala')"><div class="option-dot"></div>Não fala ou fala muito pouco</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>A criança consegue expressar suas emoções?</label>
+          <div class="options-group" id="emocoes">
+            <div class="option-item" onclick="selectRadio(this,'emocoes')"><div class="option-dot"></div>Sim, com facilidade</div>
+            <div class="option-item" onclick="selectRadio(this,'emocoes')"><div class="option-dot"></div>Com alguma dificuldade</div>
+            <div class="option-item" onclick="selectRadio(this,'emocoes')"><div class="option-dot"></div>Tem muita dificuldade</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>A criança compreende ordens simples?</label>
+          <div class="options-group" id="compreensao">
+            <div class="option-item" onclick="selectRadio(this,'compreensao')"><div class="option-dot"></div>Sim, sem dificuldade</div>
+            <div class="option-item" onclick="selectRadio(this,'compreensao')"><div class="option-dot"></div>Às vezes ignora ou demora</div>
+            <div class="option-item" onclick="selectRadio(this,'compreensao')"><div class="option-dot"></div>Frequentemente não compreende</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Observações sobre a comunicação</label>
+          <textarea id="obs_comunicacao" placeholder="Conte mais sobre como a criança se comunica..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 7: BRINCAR E INTERAÇÃO -->
+      <div class="section" id="sec-7">
+        <p class="section-title">Brincar e Interação Social</p>
+        <p class="section-subtitle">Como a criança brinca e se relaciona</p>
+
+        <div class="field">
+          <label>Com quem a criança prefere brincar?</label>
+          <div class="options-group" id="pref_brincar">
+            <div class="option-item" onclick="selectRadio(this,'pref_brincar')"><div class="option-dot"></div>Com outras crianças</div>
+            <div class="option-item" onclick="selectRadio(this,'pref_brincar')"><div class="option-dot"></div>Com adultos</div>
+            <div class="option-item" onclick="selectRadio(this,'pref_brincar')"><div class="option-dot"></div>Sozinha</div>
+            <div class="option-item" onclick="selectRadio(this,'pref_brincar')"><div class="option-dot"></div>Indiferente</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Quais são as brincadeiras preferidas?</label>
+          <textarea id="brinc_preferidas" placeholder="Ex: Lego, bonecas, futebol, videogame..."></textarea>
+        </div>
+        <div class="field">
+          <label>Como a criança se relaciona com outras crianças?</label>
+          <div class="options-group" id="rel_criancas">
+            <div class="option-item" onclick="selectRadio(this,'rel_criancas')"><div class="option-dot"></div>Muito sociável e faz amigos facilmente</div>
+            <div class="option-item" onclick="selectRadio(this,'rel_criancas')"><div class="option-dot"></div>Tem alguns amigos, mas é mais reservada</div>
+            <div class="option-item" onclick="selectRadio(this,'rel_criancas')"><div class="option-dot"></div>Prefere ficar sozinha</div>
+            <div class="option-item" onclick="selectRadio(this,'rel_criancas')"><div class="option-dot"></div>Tem conflitos frequentes</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>A criança tem amigos próximos?</label>
+          <textarea id="amigos" placeholder="Ex: Tem um melhor amigo na escola, não tem amigos fora da escola..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 8: COMPORTAMENTO -->
+      <div class="section" id="sec-8">
+        <p class="section-title">Comportamento</p>
+        <p class="section-subtitle">Aspectos emocionais e comportamentais</p>
+
+        <div class="field">
+          <label>Como a criança reage a frustrações?</label>
+          <div class="options-group" id="frustracao">
+            <div class="option-item" onclick="selectRadio(this,'frustracao')"><div class="option-dot"></div>Lida bem, aceita limites</div>
+            <div class="option-item" onclick="selectRadio(this,'frustracao')"><div class="option-dot"></div>Fica chateada mas se recupera rápido</div>
+            <div class="option-item" onclick="selectRadio(this,'frustracao')"><div class="option-dot"></div>Tem crises intensas / birras fortes</div>
+            <div class="option-item" onclick="selectRadio(this,'frustracao')"><div class="option-dot"></div>Autoagressão ou heteroagressão</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>A criança apresenta medos ou fobias?</label>
+          <textarea id="medos" placeholder="Ex: Medo do escuro, de barulhos altos..."></textarea>
+        </div>
+        <div class="field">
+          <label>A criança apresenta comportamentos repetitivos?</label>
+          <textarea id="repeticao" placeholder="Ex: Balançar o corpo, alinhar objetos, rituais..."></textarea>
+        </div>
+        <div class="field">
+          <label>Como é o sono da criança?</label>
+          <div class="options-group" id="sono">
+            <div class="option-item" onclick="selectRadio(this,'sono')"><div class="option-dot"></div>Dorme bem e tranquilo</div>
+            <div class="option-item" onclick="selectRadio(this,'sono')"><div class="option-dot"></div>Dificuldade para adormecer</div>
+            <div class="option-item" onclick="selectRadio(this,'sono')"><div class="option-dot"></div>Acorda com frequência à noite</div>
+            <div class="option-item" onclick="selectRadio(this,'sono')"><div class="option-dot"></div>Pesadelos frequentes</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Como você descreveria o temperamento da criança?</label>
+          <textarea id="temperamento" placeholder="Ex: Agitada, calma, ansiosa, alegre..."></textarea>
+        </div>
+      </div>
+
+      <!-- SEÇÃO 9: HISTÓRICO E QUEIXA -->
+      <div class="section" id="sec-9">
+        <p class="section-title">Histórico e Queixa Principal</p>
+        <p class="section-subtitle">O motivo pelo qual está buscando atendimento</p>
+
+        <div class="field">
+          <label>A criança já fez algum acompanhamento psicológico ou terapêutico? <span>*</span></label>
+          <div class="options-group" id="acomp_anterior">
+            <div class="option-item" onclick="selectRadio(this,'acomp_anterior')"><div class="option-dot"></div>Não, é a primeira vez</div>
+            <div class="option-item" onclick="selectRadio(this,'acomp_anterior')"><div class="option-dot"></div>Sim, anteriormente</div>
+            <div class="option-item" onclick="selectRadio(this,'acomp_anterior')"><div class="option-dot"></div>Sim, ainda está em acompanhamento</div>
+          </div>
+        </div>
+        <div class="field">
+          <label>Se sim, qual tipo e por quanto tempo?</label>
+          <textarea id="tipo_acomp" placeholder="Ex: Fonoaudiologia por 1 ano, psicologia por 6 meses..."></textarea>
+        </div>
+        <div class="field">
+          <label>A criança tem algum diagnóstico? <span>*</span></label>
+          <textarea id="diagnostico" placeholder="Ex: TDAH, TEA, nenhum diagnóstico até o momento..."></textarea>
+        </div>
+        <div class="field">
+          <label>Qual é a queixa principal que motivou a busca pelo atendimento? <span>*</span></label>
+          <textarea id="queixa_principal" placeholder="Descreva com detalhes o que observou e o que te preocupa..."></textarea>
+        </div>
+        <div class="field">
+          <label>Há quanto tempo observa esses comportamentos?</label>
+          <input type="text" id="tempo_queixa" placeholder="Ex: Há 6 meses, desde o início do ano...">
+        </div>
+        <div class="field">
+          <label>O que você espera do atendimento?</label>
+          <textarea id="expectativa" placeholder="Ex: Entender o comportamento da minha filha, ajudá-la com a ansiedade..."></textarea>
+        </div>
+      </div>
+
+    </div><!-- /form-container -->
+
+    <div class="btn-row" id="btn-row">
+      <button class="btn btn-back" id="btn-back" onclick="goBack()" style="display:none">← Voltar</button>
+      <button class="btn btn-next" id="btn-next" onclick="goNext()">Continuar →</button>
+    </div>
+
+    <!-- SUCCESS -->
+    <div id="success-screen" class="form-container">
+      <div class="success-icon">🌿</div>
+      <h2>Anamnese enviada!</h2>
+      <p>Obrigado por compartilhar essas informações.<br>A psicóloga irá analisá-las e entrará em contato em breve.</p>
+    </div>
+  </div><!-- /form-part -->
+
+  <!-- ADMIN TOGGLE -->
+  <div class="admin-toggle" id="admin-toggle-bar">
+    <button class="admin-btn" onclick="showAdminLogin()">🔒 Área do psicólogo</button>
+  </div>
+
+  <!-- ADMIN LOGIN -->
+  <div id="admin-login-wrap" style="display:none; padding:1rem;">
+    <div id="admin-login">
+      <h3>🔒 Acesso restrito</h3>
+      <input type="password" id="admin-pass" placeholder="Senha" onkeydown="if(event.key==='Enter')checkPass()">
+      <button onclick="checkPass()">Entrar</button>
+      <p class="login-err" id="login-err">Senha incorreta</p>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div id="admin-panel">
+    <div class="admin-header">
+      <h2>📋 Anamneses recebidas</h2>
+      <button class="admin-close" onclick="closeAdmin()">✕</button>
+    </div>
+    <div id="submissions-container"></div>
+  </div>
+
+</div>
+
+<script>
+const ADMIN_PASS = 'psico2025';
+const STORAGE_KEY = 'anamnese_submissions';
+
+const sections = [
+  'Dados da Criança','Dados da Família','Rotina da Criança','Rotina dos Pais',
+  'Desenvolvimento','Comunicação','Brincar e Interação','Comportamento','Histórico e Queixa'
+];
+let current = 1;
+const total = 9;
+
+const radioSelections = {};
+
+function selectRadio(el, group) {
+  document.querySelectorAll(`#${group} .option-item`).forEach(i => i.classList.remove('selected'));
+  el.classList.add('selected');
+  radioSelections[group] = el.textContent.trim();
+}
+
+function initDots() {
+  const wrap = document.getElementById('step-dots');
+  wrap.innerHTML = '';
+  for(let i=1;i<=total;i++){
+    const d = document.createElement('div');
+    d.className = 'step-dot' + (i===1?' active':'');
+    d.id = 'dot-'+i;
+    wrap.appendChild(d);
+  }
+}
+
+function updateProgress() {
+  const pct = Math.round((current/total)*100);
+  document.getElementById('progress-fill').style.width = pct+'%';
+  document.getElementById('section-name').textContent = sections[current-1];
+  document.getElementById('section-count').textContent = current+' de '+total;
+  for(let i=1;i<=total;i++){
+    const d = document.getElementById('dot-'+i);
+    d.className = 'step-dot'+(i<current?' done':i===current?' active':'');
+  }
+  const backBtn = document.getElementById('btn-back');
+  backBtn.style.display = current > 1 ? 'block' : 'none';
+  document.getElementById('btn-next').textContent = current===total ? 'Enviar anamnese ✓' : 'Continuar →';
+}
+
+function goNext() {
+  if(current===total) { submitForm(); return; }
+  document.getElementById('sec-'+current).classList.remove('active');
+  current++;
+  document.getElementById('sec-'+current).classList.add('active');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goBack() {
+  document.getElementById('sec-'+current).classList.remove('active');
+  current--;
+  document.getElementById('sec-'+current).classList.add('active');
+  updateProgress();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
+}
+
+function calcAge(dob) {
+  if(!dob) return '';
+  const b = new Date(dob), n = new Date();
+  let age = n.getFullYear() - b.getFullYear();
+  if(n.getMonth() < b.getMonth() || (n.getMonth()===b.getMonth() && n.getDate()<b.getDate())) age--;
+  return age+' anos';
+}
+
+function submitForm() {
+  const data = {
+    timestamp: new Date().toLocaleString('pt-BR'),
+    sec1: {
+      nome_crianca: val('nome_crianca'),
+      data_nasc: val('data_nasc'),
+      idade: calcAge(val('data_nasc')),
+      sexo: val('sexo'),
+      escola: val('escola'),
+      serie: val('serie'),
+      quem_mora: val('quem_mora')
+    },
+    sec2: {
+      nome_resp: val('nome_resp'),
+      parentesco: val('parentesco'),
+      idade_resp: val('idade_resp'),
+      profissao_resp: val('profissao_resp'),
+      estado_civil: val('estado_civil'),
+      irmaos: val('irmaos'),
+      outros_convivem: val('outros_convivem')
+    },
+    sec3: {
+      hora_acorda: val('hora_acorda'),
+      hora_dorme: val('hora_dorme'),
+      soneca: radioSelections['soneca']||'',
+      alimentacao: val('alimentacao'),
+      atividades: val('atividades'),
+      tela: val('tela')
+    },
+    sec4: {
+      horario_trabalho: val('horario_trabalho'),
+      cuidador: val('cuidador'),
+      tempo_qualidade: radioSelections['tempo_qualidade']||'',
+      dinamica_familia: val('dinamica_familia')
+    },
+    sec5: {
+      gestacao: radioSelections['gestacao']||'',
+      parto: val('parto'),
+      idade_andar: val('idade_andar'),
+      idade_falar: val('idade_falar'),
+      esfincters: val('esfincters'),
+      historico_saude: val('historico_saude'),
+      medicamentos: val('medicamentos')
+    },
+    sec6: {
+      fala: radioSelections['fala']||'',
+      emocoes: radioSelections['emocoes']||'',
+      compreensao: radioSelections['compreensao']||'',
+      obs_comunicacao: val('obs_comunicacao')
+    },
+    sec7: {
+      pref_brincar: radioSelections['pref_brincar']||'',
+      brinc_preferidas: val('brinc_preferidas'),
+      rel_criancas: radioSelections['rel_criancas']||'',
+      amigos: val('amigos')
+    },
+    sec8: {
+      frustracao: radioSelections['frustracao']||'',
+      medos: val('medos'),
+      repeticao: val('repeticao'),
+      sono: radioSelections['sono']||'',
+      temperamento: val('temperamento')
+    },
+    sec9: {
+      acomp_anterior: radioSelections['acomp_anterior']||'',
+      tipo_acomp: val('tipo_acomp'),
+      diagnostico: val('diagnostico'),
+      queixa_principal: val('queixa_principal'),
+      tempo_queixa: val('tempo_queixa'),
+      expectativa: val('expectativa')
+    }
+  };
+
+  saveSubmission(data);
+
+  for(let i=1;i<=total;i++) document.getElementById('sec-'+i).classList.remove('active');
+  document.getElementById('btn-row').style.display='none';
+  document.getElementById('success-screen').classList.add('visible');
+  document.querySelector('.progress-wrap').style.display='none';
+}
+
+async function saveSubmission(data) {
+  try {
+    const key = 'sub_'+Date.now();
+    await window.storage.set(key, JSON.stringify(data), true);
+  } catch(e) { console.error('storage err',e); }
+}
+
+function showAdminLogin() {
+  document.getElementById('admin-toggle-bar').style.display='none';
+  document.getElementById('admin-login-wrap').style.display='block';
+  setTimeout(()=>document.getElementById('admin-pass').focus(),100);
+}
+
+function checkPass() {
+  const p = document.getElementById('admin-pass').value;
+  if(p === ADMIN_PASS) {
+    document.getElementById('admin-login-wrap').style.display='none';
+    loadAdminPanel();
+  } else {
+    document.getElementById('login-err').style.display='block';
+  }
+}
+
+async function loadAdminPanel() {
+  document.getElementById('admin-panel').classList.add('visible');
+  const container = document.getElementById('submissions-container');
+  container.innerHTML = '<p style="color:var(--text-muted);font-size:13px">Carregando...</p>';
+
+  try {
+    const keys = await window.storage.list('sub_', true);
+    if(!keys || !keys.keys || keys.keys.length===0) {
+      container.innerHTML = '<div class="empty-state">Nenhuma anamnese recebida ainda.</div>';
+      return;
+    }
+
+    const all = [];
+    for(const k of keys.keys) {
+      try {
+        const r = await window.storage.get(k, true);
+        if(r) all.push(JSON.parse(r.value));
+      } catch(e){}
+    }
+
+    all.sort((a,b)=>new Date(b.timestamp)-new Date(a.timestamp));
+
+    if(all.length===0){
+      container.innerHTML = '<div class="empty-state">Nenhuma anamnese recebida ainda.</div>';
+      return;
+    }
+
+    const listEl = document.createElement('div');
+    listEl.className = 'submissions-list';
+
+    all.forEach((sub,i)=>{
+      const nome = sub.sec1.nome_crianca || 'Criança sem nome';
+      const card = document.createElement('div');
+      card.className = 'submission-card';
+      card.innerHTML = `
+        <div class="submission-card-header" onclick="toggleCard(this)">
+          <h3>🧒 ${nome} <span class="badge">${sub.sec1.idade||''}</span></h3>
+          <span>${sub.timestamp}</span>
+        </div>
+        <div class="submission-body" id="body-${i}">
+          ${renderSection('1. Dados da Criança', [
+            ['Nome', sub.sec1.nome_crianca],
+            ['Nascimento', sub.sec1.data_nasc],
+            ['Idade', sub.sec1.idade],
+            ['Sexo', sub.sec1.sexo],
+            ['Escola', sub.sec1.escola],
+            ['Série/Ano', sub.sec1.serie],
+            ['Mora com', sub.sec1.quem_mora],
+          ])}
+          ${renderSection('2. Dados da Família', [
+            ['Responsável', sub.sec2.nome_resp],
+            ['Parentesco', sub.sec2.parentesco],
+            ['Idade do resp.', sub.sec2.idade_resp],
+            ['Profissão', sub.sec2.profissao_resp],
+            ['Estado civil', sub.sec2.estado_civil],
+            ['Irmãos', sub.sec2.irmaos],
+            ['Outros convivem', sub.sec2.outros_convivem],
+          ])}
+          ${renderSection('3. Rotina da Criança', [
+            ['Acorda às', sub.sec3.hora_acorda],
+            ['Dorme às', sub.sec3.hora_dorme],
+            ['Soneca', sub.sec3.soneca],
+            ['Alimentação', sub.sec3.alimentacao],
+            ['Atividades', sub.sec3.atividades],
+            ['Tempo de tela', sub.sec3.tela],
+          ])}
+          ${renderSection('4. Rotina dos Pais', [
+            ['Horário trabalho', sub.sec4.horario_trabalho],
+            ['Cuidador', sub.sec4.cuidador],
+            ['Tempo de qualidade', sub.sec4.tempo_qualidade],
+            ['Dinâmica familiar', sub.sec4.dinamica_familia],
+          ])}
+          ${renderSection('5. Desenvolvimento', [
+            ['Gestação', sub.sec5.gestacao],
+            ['Parto', sub.sec5.parto],
+            ['Início da marcha', sub.sec5.idade_andar],
+            ['Início da fala', sub.sec5.idade_falar],
+            ['Esfíncteres', sub.sec5.esfincters],
+            ['Histórico de saúde', sub.sec5.historico_saude],
+            ['Medicamentos', sub.sec5.medicamentos],
+          ])}
+          ${renderSection('6. Comunicação', [
+            ['Qualidade da fala', sub.sec6.fala],
+            ['Expressão emocional', sub.sec6.emocoes],
+            ['Compreensão', sub.sec6.compreensao],
+            ['Observações', sub.sec6.obs_comunicacao],
+          ])}
+          ${renderSection('7. Brincar e Interação', [
+            ['Prefere brincar com', sub.sec7.pref_brincar],
+            ['Brincadeiras favoritas', sub.sec7.brinc_preferidas],
+            ['Relação com crianças', sub.sec7.rel_criancas],
+            ['Amigos', sub.sec7.amigos],
+          ])}
+          ${renderSection('8. Comportamento', [
+            ['Reação à frustração', sub.sec8.frustracao],
+            ['Medos/Fobias', sub.sec8.medos],
+            ['Comportamentos repetitivos', sub.sec8.repeticao],
+            ['Sono', sub.sec8.sono],
+            ['Temperamento', sub.sec8.temperamento],
+          ])}
+          ${renderSection('9. Histórico e Queixa', [
+            ['Acompanhamento anterior', sub.sec9.acomp_anterior],
+            ['Tipo/Duração', sub.sec9.tipo_acomp],
+            ['Diagnóstico', sub.sec9.diagnostico],
+            ['Queixa principal', sub.sec9.queixa_principal],
+            ['Há quanto tempo', sub.sec9.tempo_queixa],
+            ['Expectativas', sub.sec9.expectativa],
+          ])}
+        </div>
+      `;
+      listEl.appendChild(card);
+    });
+
+    container.innerHTML = `<p style="font-size:13px;color:var(--text-muted);margin-bottom:1rem">${all.length} anamnese(s) recebida(s)</p>`;
+    container.appendChild(listEl);
+
+  } catch(e) {
+    container.innerHTML = '<div class="empty-state">Erro ao carregar. Tente novamente.</div>';
+    console.error(e);
+  }
+}
+
+function renderSection(title, rows) {
+  const rowsHtml = rows.map(([q,a])=>{
+    if(!a) return '';
+    return `<div class="answer-row"><span class="answer-q">${q}</span><span class="answer-a">${a}</span></div>`;
+  }).join('');
+  if(!rowsHtml.trim()) return '';
+  return `<div class="answer-section"><h4>${title}</h4>${rowsHtml}</div>`;
+}
+
+function toggleCard(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('open');
+}
+
+function closeAdmin() {
+  document.getElementById('admin-panel').classList.remove('visible');
+  document.getElementById('admin-toggle-bar').style.display='block';
+}
+
+initDots();
+updateProgress();
+</script>
